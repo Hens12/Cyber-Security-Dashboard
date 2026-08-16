@@ -1,0 +1,9 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/python_portable/python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/python_portable/Lib/site-packages"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none"
+  }
+}

@@ -1,0 +1,32 @@
+# Dependency directories & virtual environments
+node_modules/
+**/node_modules/
+.venv/
+venv/
+ENV/
+python_portable/
+**/python_portable/
+
+# Build and dist outputs
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+
+# Byte-compiled / Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# IDE & OS files
+.DS_Store
+Thumbs.db

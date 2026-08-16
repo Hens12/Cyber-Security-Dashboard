@@ -1,0 +1,7 @@
+{
+  "reportMissingImports": "none",
+  "reportMissingTypeStubs": false,
+  "extraPaths": [
+    "python_portable/Lib/site-packages"
+  ]
+}

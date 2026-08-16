@@ -1,0 +1,10 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/python_portable/python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/backend/python_portable/Lib/site-packages"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none"
+  },
+  "css.lint.unknownAtRules": "ignore"
+}
