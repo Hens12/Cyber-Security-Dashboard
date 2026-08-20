@@ -28,7 +28,7 @@ export default function AppLayout() {
     }
   }, [initialize]);
 
-  // Demo telemetry loop — security events & stats
+  // Demo telemetry loop — security events, stats & system metrics
   useEffect(() => {
     if (!isLive || !isDemoMode) return;
 
@@ -41,9 +41,16 @@ export default function AppLayout() {
       updateStats();
     }, 3000);
 
+    const metricsInterval = setInterval(() => {
+      const cpu = Math.max(5, Math.min(95, 40 + (Math.random() - 0.5) * 15));
+      const ram = Math.max(10, Math.min(95, 55 + (Math.random() - 0.5) * 5));
+      useSecurityStore.getState().updateSystemMetrics(cpu, ram);
+    }, 1000);
+
     return () => {
       clearInterval(eventInterval);
       clearInterval(statsInterval);
+      clearInterval(metricsInterval);
     };
   }, [isLive, isDemoMode, addEvent, updateStats]);
 
@@ -60,7 +67,11 @@ export default function AppLayout() {
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          addEvent(data);
+          if (data.type === 'system_metrics') {
+            useSecurityStore.getState().updateSystemMetrics(data.cpu, data.ram);
+          } else {
+            addEvent(data);
+          }
         } catch (e) {
           console.error("Failed to parse WebSocket event:", e);
         }

@@ -37,19 +37,19 @@ export default function CommandPalette() {
   const q = query.toLowerCase();
   
   const matchedThreats = threats.filter(t => 
-    t.name.toLowerCase().includes(q) || t.source_ip.includes(q)
+    (t.name ?? '').toLowerCase().includes(q) || (t.source_ip ?? '').includes(q)
   ).slice(0, 3);
 
   const matchedIncidents = incidents.filter(i => 
-    i.title.toLowerCase().includes(q) || i.id.toLowerCase().includes(q)
+    (i.title ?? '').toLowerCase().includes(q) || (i.id ?? '').toLowerCase().includes(q)
   ).slice(0, 3);
 
   const matchedVulnerabilities = vulnerabilities.filter(v => 
-    v.cve_id.toLowerCase().includes(q) || v.title.toLowerCase().includes(q)
+    (v.cve_id ?? '').toLowerCase().includes(q) || (v.title ?? '').toLowerCase().includes(q)
   ).slice(0, 3);
 
   const matchedLogs = events.filter(e => 
-    e.description.toLowerCase().includes(q) || e.source_ip.includes(q)
+    (e.description ?? '').toLowerCase().includes(q) || (e.source_ip ?? '').includes(q)
   ).slice(0, 5);
 
   const hasResults = matchedThreats.length > 0 || matchedIncidents.length > 0 || matchedVulnerabilities.length > 0 || matchedLogs.length > 0;

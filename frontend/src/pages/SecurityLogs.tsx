@@ -38,7 +38,7 @@ export default function SecurityLogs() {
   const filteredEvents = events.filter(e => {
     if (!searchFilter) return true;
     const q = searchFilter.toLowerCase();
-    return e.description.toLowerCase().includes(q) || e.source_ip.includes(q) || e.attack_type.toLowerCase().includes(q);
+    return (e.description ?? '').toLowerCase().includes(q) || (e.source_ip ?? '').includes(q) || (e.attack_type ?? '').toLowerCase().includes(q);
   });
 
   useEffect(() => {

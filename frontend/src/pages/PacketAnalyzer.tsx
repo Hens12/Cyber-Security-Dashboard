@@ -21,9 +21,9 @@ export default function PacketAnalyzer() {
       if (filter) {
         const q = filter.toLowerCase();
         return (
-          p.source_ip.includes(q) ||
-          p.destination_ip.includes(q) ||
-          p.protocol.toLowerCase().includes(q) ||
+          (p.source_ip ?? '').includes(q) ||
+          (p.destination_ip ?? '').includes(q) ||
+          (p.protocol ?? '').toLowerCase().includes(q) ||
           (p.threat?.toLowerCase().includes(q))
         );
       }

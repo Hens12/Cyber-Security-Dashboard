@@ -61,8 +61,8 @@ export default function ThreatIntelligence() {
 
   const filteredIocs = iocs.filter(ioc => {
     if (!searchQuery) return true;
-    return ioc.value.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           ioc.type.includes(searchQuery.toLowerCase());
+    return (ioc.value ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+           (ioc.type ?? '').includes(searchQuery.toLowerCase());
   });
 
   const iconMap = { ip: Globe, domain: Link2, hash: Hash, url: Link2, email: Link2 };

@@ -9,8 +9,18 @@ import { useSecurityStore } from '../../stores/useSecurityStore';
 import { useUIStore } from '../../stores/useUIStore';
 import StatusIndicator from '../ui/StatusIndicator';
 
+function renderProgressBar(value: number, width = 14) {
+  const filledLength = Math.max(0, Math.min(width, Math.round((value / 100) * width)));
+  if (filledLength === 0) {
+    return `[${' '.repeat(width)}]`;
+  }
+  const arrows = '='.repeat(filledLength - 1) + '>';
+  const spaces = ' '.repeat(width - filledLength);
+  return `[${arrows}${spaces}]`;
+}
+
 export default function TopBar() {
-  const { stats, notifications, isLive } = useSecurityStore();
+  const { stats, notifications, isLive, systemMetrics } = useSecurityStore();
   const { toggleCommandPalette, toggleNotificationPanel } = useUIStore();
   const [time, setTime] = useState(new Date());
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -43,8 +53,8 @@ export default function TopBar() {
         </button>
       </div>
 
-      {/* Center: Global Security Status */}
-      <div className="flex items-center gap-2">
+      {/* Center: Global Security Status & Real-time Metrics */}
+      <div className="flex items-center gap-6">
         <motion.div
           className="flex items-center gap-2 px-4 py-1 rounded-full border"
           style={{
@@ -57,16 +67,41 @@ export default function TopBar() {
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         >
           <span
-            className="w-2 h-2 rounded-full animate-pulse-glow"
+            className="w-2.5 h-2.5 rounded-full animate-pulse-glow"
             style={{ backgroundColor: statusColor }}
           />
           <span
-            className="text-[11px] font-mono font-semibold tracking-wider"
+            className="text-[11px] font-mono font-semibold tracking-wider whitespace-nowrap"
             style={{ color: statusColor }}
           >
             {statusText}
           </span>
         </motion.div>
+
+        {/* Real-time CPU & RAM ASCII Progress Bars */}
+        <div className="hidden xl:flex items-center gap-6 text-[10px] font-mono leading-none border-l border-cyber-border/40 pl-6 select-none">
+          {/* CPU Metric */}
+          <div className="flex flex-col gap-0.5">
+            <div className="flex justify-between text-cyber-text-dim text-[8px] uppercase tracking-wider">
+              <span>CPU</span>
+              <span className="text-cyber-yellow font-bold font-mono">{(systemMetrics?.cpu ?? stats.cpu ?? 0).toFixed(0)}%</span>
+            </div>
+            <div className="text-cyber-yellow whitespace-pre tracking-normal">
+              {renderProgressBar(systemMetrics?.cpu ?? stats.cpu ?? 0, 15)}
+            </div>
+          </div>
+
+          {/* RAM Metric */}
+          <div className="flex flex-col gap-0.5">
+            <div className="flex justify-between text-cyber-text-dim text-[8px] uppercase tracking-wider">
+              <span>RAM</span>
+              <span className="text-cyber-cyan font-bold font-mono">{(systemMetrics?.ram ?? stats.ram ?? 0).toFixed(0)}%</span>
+            </div>
+            <div className="text-cyber-cyan whitespace-pre tracking-normal">
+              {renderProgressBar(systemMetrics?.ram ?? stats.ram ?? 0, 15)}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Right: Controls */}

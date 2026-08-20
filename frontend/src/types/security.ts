@@ -161,6 +161,8 @@ export interface DashboardStats {
   monitored_hosts: number;
   blocked_ips: number;
   system_health: number;
+  cpu?: number;
+  ram?: number;
 }
 
 export interface AuditLogEntry {

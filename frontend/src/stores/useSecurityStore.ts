@@ -29,6 +29,7 @@ interface SecurityState {
   isLive: boolean;
   eventCount: number;
   isDemoMode: boolean;
+  systemMetrics: { cpu: number; ram: number } | null;
 
   // Actions
   initialize: () => Promise<void>;
@@ -39,6 +40,7 @@ interface SecurityState {
   markNotificationRead: (id: string) => void;
   clearNotifications: () => void;
   setDemoMode: (isDemo: boolean) => void;
+  updateSystemMetrics: (cpu: number, ram: number) => void;
 }
 
 const MAX_EVENTS = 200;
@@ -56,6 +58,7 @@ export const useSecurityStore = create<SecurityState>((set, get) => ({
   isLive: true,
   eventCount: 0,
   isDemoMode: true,
+  systemMetrics: null,
 
   initialize: async () => {
     try {
@@ -95,6 +98,7 @@ export const useSecurityStore = create<SecurityState>((set, get) => ({
           playbooks: generatePlaybooks(),
           notifications: generateNotifications(3),
           eventCount: events.length,
+          systemMetrics: stats.cpu !== undefined && stats.ram !== undefined ? { cpu: stats.cpu, ram: stats.ram } : null,
         });
         return;
       }
@@ -154,7 +158,10 @@ export const useSecurityStore = create<SecurityState>((set, get) => ({
     if (!isDemoMode) {
       try {
         const stats = await fetchFromAPI('/api/dashboard');
-        set({ stats });
+        set(s => ({
+          stats,
+          systemMetrics: stats.cpu !== undefined && stats.ram !== undefined ? { cpu: stats.cpu, ram: stats.ram } : s.systemMetrics,
+        }));
       } catch (e) {
         console.error("Failed to update live stats", e);
       }
@@ -164,6 +171,8 @@ export const useSecurityStore = create<SecurityState>((set, get) => ({
       }));
     }
   },
+
+  updateSystemMetrics: (cpu, ram) => set({ systemMetrics: { cpu, ram } }),
 
   refreshThreatIntel: async () => {
     const { isDemoMode } = get();
